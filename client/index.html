@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+<head>
+<meta charset="utf-8">
+<title>Text Based Multiplayer RTS</title>
+</head>
+<!--[if IE]><script src="js/excanvas.js"></script><![endif]-->
+<link rel="stylesheet" type="text/css" href="css/base.css" />
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+<meta name="Author" content="Eigen Lenk" />
+<meta name="description" content="Real-time strategy game played using only textual commands." />
+<meta name="keywords" content="rts, tbmrts, text based, eigen lenk, html5" />
+<script type="text/javascript">
+//<![CDATA[
+var owa_baseUrl = 'http://eigen.pri.ee/owa/';
+var owa_cmds = owa_cmds || [];
+owa_cmds.push(['setSiteId', '1999fc32290b257921b07173252a0aa7']);
+owa_cmds.push(['trackPageView']);
+owa_cmds.push(['trackClicks']);
+owa_cmds.push(['trackDomStream']);
+
+(function() {
+	var _owa = document.createElement('script'); _owa.type = 'text/javascript'; _owa.async = true;
+	owa_baseUrl = ('https:' == document.location.protocol ? window.owa_baseSecUrl || owa_baseUrl.replace(/http:/, 'https:') : owa_baseUrl );
+	_owa.src = owa_baseUrl + 'modules/base/js/owa.tracker-combined-min.js';
+	var _owa_s = document.getElementsByTagName('script')[0]; _owa_s.parentNode.insertBefore(_owa, _owa_s);
+}());
+//]]>
+</script>
+<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="js/jquery.cookie.js"></script>
+<script type="text/javascript" src="js/less-1.4.1.min.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/response_handler.js"></script>
+<script type="text/javascript" src="js/display.js"></script>
+<script type="text/javascript" src="js/game.js"></script>
+<script type="text/javascript" src="js/views.js"></script>
+<script type="text/javascript" src="js/requests.js"></script>
+<script type="text/javascript" src="js/lobby.js"></script>
+<script type="text/javascript" src="js/client.js"></script>
+<script type="text/javascript" src="js/map.js"></script>
+<script type="text/javascript" src="js/log.js"></script>
+<script type="text/javascript">
+function loaded()
+{
+	display.init();
+	display.onInput = game.processInput;
+	
+	if (!$.cookie('session')) {
+		display.print(0,  0, '╔══════════════════════════════════════════════════════════════════════════════╗', {'fg': 4});
+		display.print(0, 27, '╚══════════════════════════════════════════════════════════════════════════════╝', {'fg': 4});
+		display.print(33, 27, '╣            ╠', {'fg': 4});
+		display.print(37, 27, "BEGIN", {'fg': 14});
+		for (var i = 1; i < 27; ++i) { display.print(0, i, '║', {'fg': 4}); display.print(79, i, '║', {'fg': 4}); }
+		display.print(24, 3, "╒══════════════════════════════╕", {bg:1, fg:9});
+		display.print(24, 4, "│                              │", {bg:1, fg:9});
+		display.print(27, 4, "Text Based Multiplayer RTS", {bg:1, fg:14});
+		display.print(24, 5, "│                              │", {bg:1, fg:9});
+		display.print(24, 6, "│                              │", {bg:1, fg:9});
+		display.print(34, 6, "Version 0.1.3", {bg:1, fg:11});
+		display.print(24, 7, "╘══════════════════════════════╛", {bg:1, fg:9});
+		display.print(4, 10, '"At last, a game which I could dominate."', {fg:10});
+		display.print(18, 11, '- Court stenographers all over the world', {fg:9});
+		display.print(53, 14, '"I played this a bit."', {fg:14});
+		display.print(68, 15, '- Brian', {fg:6});
+		display.print(30, 17, '"9 out of 10"', {fg:10});
+		display.print(36, 18, '- "9 out of 10" magazine', {fg:9});
+		display.print(10, 21, "\"I haven't had this much fun since my last colonoscopy.\"", {fg:11});
+		display.print(49, 22, '- Comment on The Internet', {fg:3});
+		log.visible = false;
+		display.showPrompt();
+	} else {
+		game.started = true;
+		game.readConfAndConnect();
+		views.showLandingPage();
+	}
+	if ($.cookie('wallpaper')) {
+		game.setWallpaper(parseInt($.cookie('wallpaper'), 10));
+	}
+}
+</script>
+<body onload="loaded()">
+	<div id="fb-root"></div>
+	<script>(function(d, s, id) {
+	  var js, fjs = d.getElementsByTagName(s)[0];
+	  if (d.getElementById(id)) return;
+	  js = d.createElement(s); js.id = id;
+	  js.src = "//connect.facebook.net/et_EE/all.js#xfbml=1&appId=150976678329564";
+	  fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));</script>
+	<div class="monitorWrapper">
+		<div class="display" id="canvas_display">
+		</div>
+		<div class="footer">
+			<div id="social">
+				<div class="fb-like" data-href="http://eigen.pri.ee/tbmrts" data-width="110" data-layout="button_count" data-show-faces="true" data-send="false"></div>&nbsp;&nbsp;<a href="https://twitter.com/share" class="twitter-share-button" data-hashtags="tbmrts">Tweet</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+			</div>
+			<div id="author">
+			Created by <a href="https://www.twitter.com/EigenLenk" target="_blank">Eigen Lenk</a>
+			</div>
+			<div id="support">
+			If you enjoy this game, please donate.<br />Your support helps keep the server running.
+			</div>
+			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" style="position:absolute;right:0px;top:7px;">
+				<input type="hidden" name="cmd" value="_s-xclick">
+				<input type="hidden" name="hosted_button_id" value="QP5F9RB4D82GU">
+				<input type="image" src="images/paypal2.png" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+				<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+			</form>
+		</div>
+		<div class="version">
+			Ver 0.1.3
+		</div>
+		<a href="http://eigen.pri.ee/forum/viewforum.php?f=4" target="_blank"><div style="background:inherit; width:110px; height:25px; position:absolute; top:79px; right:155px;"></div></a>
+		<a href="https://github.com/eigenl/tbmrts" target="_blank"><div style="background:inherit; width:110px; height:25px; position:absolute; top:108px; right:155px;"></div></a>
+	</div>
+</body>
+</html>

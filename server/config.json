@@ -1,0 +1,11 @@
+{
+    "port": 5000,
+    "httpAppPort": 3000,
+    "checkOrigin": true,
+    "origin": "http://eigen.pri.ee",
+	"db": {
+		"user": "",
+		"pass": "",
+		"database": ""
+	}
+}

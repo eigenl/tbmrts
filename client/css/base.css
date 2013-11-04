@@ -1,0 +1,91 @@
+body {
+	background-color: #1C1A16;
+	background-image: url('../wallpapers/wallpaper_lowcolors.jpg');
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.monitorWrapper
+{
+	width: 1200px;
+	height: 700px;
+	background-image: url('../images/monitor.png');
+	position: absolute;
+	bottom: 0px;
+	left:0;
+	right:0;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.footer
+{
+	position: absolute;
+	width: 800px;
+	left: 200px;
+	height: 57px;
+	bottom:0px;
+	font-family: "Courier New", Courier, monospace;
+	color: #593624;
+	font-size:12px;
+	text-shadow: 0px 1px 2px #cecece;
+}
+
+.version
+{
+	font-family: "Courier New", Courier, monospace;
+	color: #766452;
+	font-size:10px;	
+	position: absolute;
+	right: 610px;
+	bottom: 82px;
+	text-shadow: 0px 1px 2px #adaead;
+}
+
+.footer a {
+	color: #9f1a13;
+	text-shadow: 0px 1px 2px #dedede;
+	text-decoration:none;
+}
+
+.display
+{
+	position: relative;
+	width: 640px;
+	height: 450px;
+	top: 117px;
+	margin-left:auto;
+	margin-right:auto;
+	left: -47px;
+	color: #fefefe;
+	// font-family: "Lucida Console", Monaco, monospace;
+	font-family: "Courier New", Courier, monospace;
+	text-shadow: 0px 1px 3px #101010;
+	font-size:14px; //0.9em
+}
+
+#social
+{
+	position:absolute;
+	top: 3px;
+	left: 0px;
+}
+
+#author
+{
+	position:absolute;
+	bottom: 10px;
+}
+
+#support
+{
+	position: absolute;
+	right: 98px;
+	top: 9px;
+	text-align: center;
+	width: 310px;
+}
