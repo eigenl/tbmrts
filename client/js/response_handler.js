@@ -447,12 +447,12 @@ $(function () {
 				}
 			}
 			
-			map.display();
-			views.listBase();
-			
 			if (result.targetClient == client.index) {
 				map.calculateVisibleAreas();
 			}
+			
+			map.display();
+			views.listBase();			
 		},
 		
 		buildingHit: function(result)
@@ -501,12 +501,12 @@ $(function () {
 				map.clearSelection();	
 			}
 		
-			map.display();
-			views.listBase();
-			
 			if (result.targetClient == client.index) {
 				map.calculateVisibleAreas();
 			}
+		
+			map.display();
+			views.listBase();			
 		},
 		
 		move: function(result)
@@ -620,6 +620,9 @@ $(function () {
 			if (result.clientIndex == client.index) {
 				log.insert('You have been defeated..', 4);
 				game.defeated = true;
+				map.selectionType = 'none';
+				map.selectionIndex = -1;
+				views.updateSelectionSidebar();
 			} else {
 				log.insert(game.clientsInGame[result.clientIndex].name + ' has been defeated!', 2);
 			}

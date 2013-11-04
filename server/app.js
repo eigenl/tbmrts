@@ -87,8 +87,8 @@ wsServer.on('request', function(request)
 	// console.log("REQUEST:");
 	// console.log(request);
 	
-	console.log("New connection!");
-	console.log("  Remote address: " + request.remoteAddress);
+	// console.log("New connection!");
+	// console.log("  Remote address: " + request.remoteAddress);
 	
 	if (request.origin != config.origin) {
 		console.log("Bad origin: " + request.origin);
@@ -219,17 +219,17 @@ wsServer.on('request', function(request)
 	{
 		if (client != null)
 		{
-			console.log("Client " + client.id + " disconnects!")
-			console.log("Reason (" + reasonCode + ") " + description);
+			// console.log("Client " + client.id + " disconnects!")
+			// console.log("Reason (" + reasonCode + ") " + description);
 			
-			ServerState.removeClient(client);
 			client.onDisconnected();
+			ServerState.removeClient(client);
 			client = null;
 		}
 		else
 		{
-			console.log("NULL client disconnects.");
-			console.log("Reason (" + reasonCode + ") " + description);
+			// console.log("NULL client disconnects.");
+			// console.log("Reason (" + reasonCode + ") " + description);
 		}
     });
 });
