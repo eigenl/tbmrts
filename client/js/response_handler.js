@@ -38,6 +38,43 @@ $(function () {
 		
 		},
 		
+		unitsFortified: function(result)
+		{
+			for (var i=0; i<result.units.length;++i) {
+				map.units[result.client][result.units[i]].fortify.state = true;
+			}
+			
+			if (result.client == client.index) {
+				if (result.units.length == 1) {
+					log.insert('Unit fortified!', 2);
+				} else {
+					log.insert('Units fortified!', 2);
+				}
+			}
+			
+			views.listUnits();
+			views.updateSelectionSidebar();
+			map.display();
+		},
+		
+		unitsUnfortified: function(result)
+		{
+			for (var i=0; i<result.units.length;++i) {
+				map.units[result.client][result.units[i]].fortify.state = false;
+			}
+			
+			if (result.client == client.index) {
+				if (result.units.length == 1) {
+					log.insert('Unit mobilized!', 2);
+				} else {
+					log.insert('Units mobilized!', 2);
+				}
+			}
+			
+			views.listUnits();
+			views.updateSelectionSidebar();
+			map.display();
+		},
 		
 		
 		trainingStarted: function(result)
@@ -133,8 +170,15 @@ $(function () {
 				
 				if (result.clientIndex == client.index)
 				{
+					// Supply depot
 					if (b.type == 5) {
-						log.insert(buildingNameForType(b.type) + ' completed! Supply drop increased by ' + (client.upgrades['building'][5] ? 50 : 30) + '.', 10);
+						log.insert(buildingNameForType(b.type) + ' completed! Supply drop increased by ' + (client.upgrades['building'][5] ? 30 : 20) + '.', 10);
+					// Garage
+					} else if (b.type == 8) {
+						log.insert(buildingNameForType(b.type) + ' completed! Engineer available.', 10);
+					// Hospital
+					} else if (b.type == 7) {
+						log.insert(buildingNameForType(b.type) + ' completed! Field medic available.', 10);
 					} else {
 						log.insert(buildingNameForType(b.type) + ' completed!', 10);
 					}
@@ -168,9 +212,7 @@ $(function () {
 			if (result.success)
 			{
 				map.reset();
-				
-				// console.log(result);
-				
+
 				map.data = result.map.data;
 				map.width = result.map.width;
 				map.height = result.map.height;
@@ -237,8 +279,6 @@ $(function () {
 				log.insert(result.client.name + ' has joined the room!', 15);
 			}
 			
-			// console.log(result);
-			
 			game.clientsInGame[result.clientIndex] = result.client;
 			
 			map.buildings[result.clientIndex] = result.buildings;
@@ -282,7 +322,7 @@ $(function () {
 		
 		unitMoved: function(result)
 		{
-			var u  = map.units[result.clientIndex][result.unitIndex];
+			var u = map.units[result.clientIndex][result.unitIndex];
 			
 			u.x = result.x;
 			u.y = result.y;
@@ -303,6 +343,8 @@ $(function () {
 		buildingSold: function(result)
 		{
 			var b = map.buildings[result.client][result.index];
+
+			map.setDataAt(b.x, b.y, 0);
 
 			if (result.client == client.index) {
 				log.insert(buildingNameForType(map.buildings[result.client][result.index].type) + ' sold!', 2);
@@ -355,6 +397,12 @@ $(function () {
 					responseHandler.lastBuildingRepairMessageTime = now;
 					log.insert(buildingNameForType(map.buildings[result.client][result.index].type) + ' is being repaired.', 2);
 				}
+				
+				// A power plant was repaired and the power level changed
+				if (result.power) {
+					this.powerChange(result.power);
+				}
+				
 				if (map.isCoordVisible(b.x, b.y)) {
 					b.blink = 2;
 					setTimeout(function() { b.blink = 0; map.display(); }, 290);
@@ -393,11 +441,11 @@ $(function () {
 			views.updateSelectionSidebar();
 		},
 		
-		// A whole bunch of units destoryed at once
+		// A whole bunch of units destroyed at once
 		unitsDestroyed: function(result)
 		{
-			console.log('some units destroyed');
-			console.log(result);
+			// console.log('some units destroyed');
+			// console.log(result);
 			
 			for (var i = 0; i < game.maxPlayers; ++i)
 			{
@@ -417,8 +465,8 @@ $(function () {
 		
 		unitDestroyed: function(result)
 		{	
-			console.log('unitDestroyed');
-			console.log(result);
+			// console.log('unitDestroyed');
+			// console.log(result);
 			
 			if (result.attackerClient == client.index) {
 				log.insert("You've destroyed an enemy " + unitNameForType(map.units[result.targetClient][result.index].type)+"!", 10);
@@ -426,25 +474,16 @@ $(function () {
 				log.insert("You've lost a " + unitNameForType(map.units[result.targetClient][result.index].type)+"!", 12);
 			}
 			
-			var scoords = map.getSelectionCoords();
-			
 			var sx = map.units[result.targetClient][result.index].x;
 			var sy = map.units[result.targetClient][result.index].y;
-			
 			
 			// Remove the unit
 			map.units[result.targetClient].splice(result.index, 1);
 			
-			if (scoords != null && (scoords.x == sx && scoords.y == sy))
+			if (map.isCoordSelected(sx, sy))
 			{
-				// Keep this tile selected if there are more units on it
-				if (map.unitsAtCoord(sx, sy).length > 0) {
-					game.selectTile(sx, sy, -1);
-					views.updateSelectionSidebar();
-				} else {
-					map.clearSelection();
-					views.updateSelectionSidebar();
-				}
+				console.log("sidebar");
+				views.updateSelectionSidebar();
 			}
 			
 			if (result.targetClient == client.index) {
@@ -467,8 +506,12 @@ $(function () {
 				if ((now - responseHandler.lastBuildingUnderAttackMessageTime[b.type]) >= 7)
 				{
 					responseHandler.lastBuildingUnderAttackMessageTime[b.type] = now;
-					
 					log.insert(buildingNameForType(b.type)+" is under attack by " + game.clientsInGame[result.attackerClient].name + "!", 12);
+				}
+				
+				// A power plant was hit and the power level changed
+				if (result.power) {
+					this.powerChange(result.power);
 				}
 			}
 			
@@ -612,7 +655,6 @@ $(function () {
 			} else if ((prevPowerState.required <= prevPowerState.level) && result.required > result.level) {
 				setTimeout("log.insert('Base power offline!', 4)", 800);	
 			}
-			
 		},
 		
 		playerDefeated: function(result)

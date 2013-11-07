@@ -1,4 +1,4 @@
-﻿/*
+/*
 	The MIT License (MIT)
 
 	Copyright (c) 2013 Eigen Lenk
@@ -110,30 +110,30 @@ wsServer.on('request', function(request)
 			{
                 case 'login':
 					ServerState.performLogin(client, object.params);
-                    break;
+					break;
 					
                 case 'logout':
                     ServerState.performLogout(client);
-                    break;
+					break;
 					
                 case 'createGameSession':
 					process.nextTick(function() {
 						ServerState.createGameSession(client, object.params);
 					});
-                    break;
+					break;
 					
                 case 'join':
 					process.nextTick(function() {
 						ServerState.joinGameSession(client, object.params);
 					});
-                    break;
+					break;
 					
                 case 'leave':
 					process.nextTick(function() {
 						client.onLeave();
 						client.sendMessage({"method": "leave", "result": {"success": true}});
 					});
-                    break;
+					break;
 					
                 case 'createBuilding':
 					process.nextTick(function() {
@@ -141,76 +141,102 @@ wsServer.on('request', function(request)
 							client.gameSession.createBuilding(client, object.params);
 						}
 					});
-                    break;
+					break;
+					
                 case 'createUnit':
 					process.nextTick(function() {
 						if (client.gameSession) {
 							client.gameSession.createUnit(client, object.params);
 						}
 					});
-                    break;
-                case 'select':
+					break;
+                
+				case 'select':
 					process.nextTick(function() {
 						if (client.gameSession) {
 							client.gameSession.select(client, object.params);
 						}
 					});
-                    break;
+					break;
+				
 				case 'unselect':
 					process.nextTick(function() {
 						if (client.gameSession) {
 							client.gameSession.unselect(client);
 						}
 					});
-                    break;
+					break;
+					
                 case 'cancelOrder':
 					process.nextTick(function() {
 						if (client.gameSession) {
 							client.gameSession.cancelSelectedUnitOrders(client);
 						}
 					});
-                	break;
+					break;
+				
 	            case 'say':
 					process.nextTick(function() {
 						if (client.gameSession) {
 							client.gameSession.sendChatMessage(client, object.params);
 						}
 					});
-                	break;
+					break;
+				
                 case 'move':
 					process.nextTick(function() {
 						if (client.gameSession) {
 							client.gameSession.move(client, object.params);
 						}
 					});
-                    break;
+					break;
+				
 				case 'attack':
 					process.nextTick(function() {
 						if (client.gameSession) {
 							client.gameSession.attack(client, object.params);
 						}
 					});
-                    break;
+					break;
+					
 				case 'repair':
 					process.nextTick(function() {
 						if (client.gameSession)
 							client.gameSession.repair(client, object.params);
 					});
-                    break;
+					break;
+					
 				case 'sell':
 					process.nextTick(function() {
 						if (client.gameSession) {
 							client.gameSession.sellBuilding(client, object.params);
 						}
 					});
-                    break;
+					break;
+				
 				case 'upgrade':
 					process.nextTick(function() {
 						if (client.gameSession) {
 							client.gameSession.upgrade(client, object.params);
 						}
 					});
-                    break;
+					break;
+				
+				case 'fortify':
+					process.nextTick(function() {
+						if (client.gameSession) {
+							client.gameSession.fortify(client);
+						}
+					});
+				break;
+				
+				case 'unfortify':
+					process.nextTick(function() {
+						if (client.gameSession) {
+							client.gameSession.unfortify(client);
+						}
+					});
+				break;
             }
         }
     });
