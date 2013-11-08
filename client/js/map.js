@@ -115,9 +115,17 @@ $(function () {
 			return false;
 		},
 		
+		shuffle: function(o) {
+		    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+		    return o;
+		},
+				
 		spawnPointAroundPoint: function(x, y)
 		{
-			for (var i = 0; i < 8; ++i) {
+			var indexes = this.shuffle([0,1,2,3,4,5,6,7]);
+
+			for (var j = 0; j < 8; ++j) {
+				var i = indexes[j];
 				var _x, _y;
 				if (i == 0) { _x = x - 1; _y = y + 1; }
 				else if (i == 1) { _x = x; _y = y + 1; }
