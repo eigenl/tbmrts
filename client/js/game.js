@@ -1050,7 +1050,6 @@ $(function () {
 				log.insert("dropped and where you can construct new and sell existing buildings. Upgrade", 15);
 				log.insert("the building to decrease supply drop interval by 20%.", 15);
 				log.insert(" ", 0);
-				log.insert(" ", 0);
 				log.insert("Strength: 600", 3);
 				return;
 			}

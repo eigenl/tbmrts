@@ -410,6 +410,9 @@ $(function () {
 			this.unitCycleTimeout = setTimeout("map.drawUnits()", 1000);
 			
 			this.unitCycleCounter ++;
+			if (this.unitCycleCounter >= 1000) { 
+				this.unitCycleCounter = 0;
+			}
 			
 			for (var i = 0; i < map.selectedTileCoords.length; ++i)
 			{

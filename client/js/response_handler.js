@@ -670,6 +670,10 @@ $(function () {
 			}
 		},
 		
+		lobbyUpdated: function(result) {
+			requests.getGameSessions();
+		},
+		
 		lastUnitUnderAttackMessageTime: 0,
 		lastBuildingRepairMessageTime: 0,
 		lastBuildingUnderAttackMessageTime: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
